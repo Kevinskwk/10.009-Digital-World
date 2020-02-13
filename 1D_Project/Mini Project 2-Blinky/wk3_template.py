@@ -32,10 +32,10 @@ while True:                             # Run forever
     output = GPIO.input(switch)
     if output is GPIO.HIGH:
         GPIO.output(led[0], GPIO.LOW)   # Turn off
-        blink(led[1], 0.01)
+        blink(led[1], 1)
     else:
         GPIO.output(led[1], GPIO.LOW)   # Turn off
-        blink(led[0], 0.01)
+        blink(led[0], 1)
 
     # Check whether the switch is closed or opened. When the switch is closed,
     # turn off the LED at GPIO24 and blink the LED at GPIO23. When the switch
