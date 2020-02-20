@@ -29,24 +29,6 @@ robot = ThymioReal()  # create a robot object
 
 no_movements = True
 
-while no_movements:
-    # Check the value of movement_list in the database at an interval of 0.5
-    # seconds. Continue checking as long as the movement_list is not in the
-    # database (ie. it is None). If movement_list is a valid list, the program
-    # exits the while loop and controls the robot to perform the movements
-    # specified in the movement_list in sequential order. Each movement in the
-    # list lasts exactly 1 second.
-
-    # Write your code here
-    command_list = db.child("command_list").get(user['idToken'])
-    db.child("command_list").set(None, user['idToken'])
-    if command_list == None:
-        sleep(0.5)
-    else:
-        no_movements = False
-        execute(robot, command_list)
-        no_movements = True
-
 # Write the code to control the robot here
 def execute(bot, command):
     for i in command:
@@ -65,4 +47,22 @@ def execute(bot, command):
 # 'up' movement => robot.wheels(100, 100)
 # 'left' movement => robot.wheels(-100, 100)
 # 'right' movement => robot.wheels(100, -100)
+
+while no_movements:
+    # Check the value of movement_list in the database at an interval of 0.5
+    # seconds. Continue checking as long as the movement_list is not in the
+    # database (ie. it is None). If movement_list is a valid list, the program
+    # exits the while loop and controls the robot to perform the movements
+    # specified in the movement_list in sequential order. Each movement in the
+    # list lasts exactly 1 second.
+
+    # Write your code here
+    command_list = db.child("command_list").get(user['idToken'])
+    db.child("command_list").set(None, user['idToken'])
+    if command_list == None:
+        sleep(0.5)
+    else:
+        no_movements = False
+        execute(robot, command_list.val())
+        no_movements = True
 
