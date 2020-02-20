@@ -2,33 +2,42 @@ import RPi.GPIO as GPIO
 from time import sleep
 from libdw import pyrebase
 
-
-url = ''  # URL to Firebase database
-apikey = ''  # unique token used for authentication
+projectid = "dw1dproject"
+dburl = "https://" + projectid + ".firebaseio.com"
+authdomain = projectid + ".firebaseapp.com"
+apikey = "AIzaSyCMv0kFFwAnStTfLbI94PVdppuPZAhmS_Q"  # unique token used for authentication
+email = "angsonggee@yahoo.com.sg"
+password = "password"
 
 config = {
     "apiKey": apikey,
-    "databaseURL": url,
+    "authDomain": authdomain,
+    "databaseURL": dburl,
 }
 
 # Create a firebase object by specifying the URL of the database and its secret token.
-# The firebase object has functions put and get, that allows user to put data onto 
+# The firebase object has functions put and get, that allows user to put data onto
 # the database and also retrieve data from the database.
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
+user = auth.sign_in_with_email_and_password(email, password)
 
 # Use the BCM GPIO numbers as the numbering scheme.
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 
 # Use GPIO12, 16, 20 and 21 for the buttons.
+buttons = [12, 16, 20, 21]
 
 # Set GPIO numbers in the list: [12, 16, 20, 21] as input with pull-down resistor.
+GPIO.setup(buttons, GPIO.IN)
 
 # Keep a list of the expected movements that the eBot should perform sequentially.
 movement_list = []
 
 
 done = False
+buttons_dict = {"w": buttons[0], "a": buttons[1], "d": buttons[2], "Ok": buttons[3]}
 
 while not done:
 
@@ -45,8 +54,16 @@ while not done:
     we can address it by putting a short delay between each iteration after a key
     press has been detected.
     '''
-    pass
-
+    for key, value in buttons_dict.items():
+        # Loop through each button in Dict
+        output = GPIO.input(value)
+        if output is GPIO.HIGH:
+            if key != "Ok":
+                movement_list.append(key)
+                sleep(0.3)
+            else:
+                break
 
 # Write to database once the OK button is pressed
 
+db.child("movement_list").set(movement_list, user['idToken'])
