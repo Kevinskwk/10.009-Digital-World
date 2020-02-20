@@ -19,6 +19,7 @@ config = {
 # The firebase object has functions put and get, that allows user to put data onto
 # the database and also retrieve data from the database.
 firebase = pyrebase.initialize_app(config)
+auth = firebase.auth()
 db = firebase.database()
 user = auth.sign_in_with_email_and_password(email, password)
 
@@ -62,8 +63,14 @@ while not done:
                 movement_list.append(key)
                 sleep(0.3)
             else:
-                break
+                current_list = db.child("movement_list").get(user['idToken'])
+                if current_list != null:
+                    current_list.append(movement_list)
+                    db.child("movement_list").set(current_list, user['idToken'])
+                else:
+                    db.child("movement_list").set(movement_list, user['idToken'])
+                movement_list = []
+            
 
 # Write to database once the OK button is pressed
 
-db.child("movement_list").set(movement_list, user['idToken'])
