@@ -31,7 +31,7 @@ GPIO.setmode(GPIO.BCM)
 buttons = [12, 16, 20, 21]
 
 # Set GPIO numbers in the list: [12, 16, 20, 21] as input with pull-down resistor.
-GPIO.setup(buttons, GPIO.IN)
+GPIO.setup(buttons, GPIO.IN, GPIO.PUD_DOWN)
 
 # Keep a list of the expected movements that the eBot should perform sequentially.
 movement_list = []
@@ -61,19 +61,21 @@ while not done:
         if output is GPIO.HIGH:
             if key != "Ok":
                 movement_list.append(key)
-                sleep(0.3)
             else:
-                current_list = db.child("movement_list").get(user['idToken'])
-                if current_list != None:
-                    # There's something inside the list!
-                    current_list.append(movement_list)
-                    db.child("movement_list").set(current_list, user['idToken'])
-                else:
+                db.child("movement_list").set(movement_list, user['idToken'])
+#                current_list = db.child("movement_list").get(user['idToken'])
+#                if current_list.val() != None:
+#                    new_list = current_list.val()
+#                    new_list.append(movement_list)
+#                    db.child("movement_list").set(new_list, user['idToken'])
+#                else:
                     # Nothing in current list, rewrite
-                    db.child("movement_list").set(movement_list, user['idToken'])
+#                   db.child("movement_list").set(movement_list, user['idToken'])
                 
                 movement_list = []
+            sleep(0.3)
             
+GPIO.cleanup()
 
 # Write to database once the OK button is pressed
 
