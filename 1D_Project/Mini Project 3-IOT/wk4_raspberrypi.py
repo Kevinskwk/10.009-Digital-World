@@ -65,12 +65,7 @@ while not done:
             else:
                 current_list = db.child("movement_list").get(user['idToken'])
                 if current_list != None:
-<<<<<<< HEAD
                     list(current_list).append(movement_list)
-=======
-                    # There's something inside the list!
-                    current_list.append(movement_list)
->>>>>>> master
                     db.child("movement_list").set(current_list, user['idToken'])
                 else:
                     # Nothing in current list, rewrite
