@@ -2,13 +2,12 @@ from pythymiodw import *
 from time import sleep
 from libdw import pyrebase
 
-
-projectid = "replace me"
+projectid = "dw1dproject"
 dburl = "https://" + projectid + ".firebaseio.com"
 authdomain = projectid + ".firebaseapp.com"
-apikey = "replace me"
-email = "replace me"
-password = "replace me"
+apikey = "AIzaSyCMv0kFFwAnStTfLbI94PVdppuPZAhmS_Q"  # unique token used for authentication
+email = "angsonggee@yahoo.com.sg"
+password = "password"
 
 config = {
     "apiKey": apikey,
@@ -23,7 +22,7 @@ user = auth.sign_in_with_email_and_password(email, password)
 # Create a firebase object by specifying the URL of the database and its secret token.
 # The firebase object has functions put and get, that allows user to put data onto 
 # the database and also retrieve data from the database.
-firebase = pyrebase.initialize_app(config)
+
 db = firebase.database()
 
 robot = ThymioReal()  # create a robot object
@@ -40,14 +39,13 @@ while no_movements:
 
     # Write your code here
     command_list = db.child("command_list").get(user['idToken'])
+    db.child("command_list").set(None, user['idToken'])
     if command_list == None:
         sleep(0.5)
     else:
         no_movements = False
         execute(robot, command_list)
         no_movements = True
-        db.child("command_list").set(None, user['idToken'])
-
 
 # Write the code to control the robot here
 def execute(bot, command):

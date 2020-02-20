@@ -64,8 +64,8 @@ while not done:
                 sleep(0.3)
             else:
                 current_list = db.child("movement_list").get(user['idToken'])
-                if current_list != null:
-                    current_list.append(movement_list)
+                if current_list != None:
+                    list(current_list).append(movement_list)
                     db.child("movement_list").set(current_list, user['idToken'])
                 else:
                     db.child("movement_list").set(movement_list, user['idToken'])
