@@ -3,13 +3,22 @@ from time import sleep
 from libdw import pyrebase
 
 
-url = ''  # URL to Firebase database
-apikey = ''  # unique token used for authentication
+projectid = "replace me"
+dburl = "https://" + projectid + ".firebaseio.com"
+authdomain = projectid + ".firebaseapp.com"
+apikey = "replace me"
+email = "replace me"
+password = "replace me"
 
 config = {
     "apiKey": apikey,
-    "databaseURL": url,
+    "authDomain": authdomain,
+    "databaseURL": dburl,
 }
+
+firebase = pyrebase.initialize_app(config)
+auth = firebase.auth()
+user = auth.sign_in_with_email_and_password(email, password)
 
 # Create a firebase object by specifying the URL of the database and its secret token.
 # The firebase object has functions put and get, that allows user to put data onto 
@@ -30,9 +39,30 @@ while no_movements:
     # list lasts exactly 1 second.
 
     # Write your code here
+    command_list = db.child("command_list").get(user['idToken'])
+    if command_list == None:
+        sleep(0.5)
+    else:
+        no_movements = False
+        execute(robot, command_list)
+        no_movements = True
+        db.child("command_list").set(None, user['idToken'])
 
 
 # Write the code to control the robot here
+def execute(bot, command):
+    for i in command:
+        if i == "w":
+            bot.wheels(100, 100)
+        elif i == "a":
+            bot.wheels(-100, 100)
+        elif i == "d":
+            bot.wheels(100, -100)
+        else:
+            print("Unrecognised command")
+        bot.sleep(1)
+    
+    bot.wheels(0, 0)
 
 # 'up' movement => robot.wheels(100, 100)
 # 'left' movement => robot.wheels(-100, 100)
