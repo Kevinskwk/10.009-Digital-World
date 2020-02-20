@@ -29,8 +29,10 @@ robot = ThymioReal()  # create a robot object
 
 no_movements = True
 
+print("setup check!")
 # Write the code to control the robot here
 def execute(bot, command):
+    print(command)
     for i in command:
         if i == "w":
             bot.wheels(100, 100)
@@ -41,7 +43,7 @@ def execute(bot, command):
         else:
             print("Unrecognised command")
         bot.sleep(1)
-    
+    print("finished execution!")
     bot.wheels(0, 0)
 
 # 'up' movement => robot.wheels(100, 100)
@@ -57,12 +59,10 @@ while no_movements:
     # list lasts exactly 1 second.
 
     # Write your code here
-    command_list = db.child("command_list").get(user['idToken'])
-    db.child("command_list").set(None, user['idToken'])
-    if command_list == None:
-        sleep(0.5)
-    else:
+    command_list = db.child("movement_list").get(user['idToken'])
+    db.child("movement_list").set(None, user['idToken'])
+    if command_list.val() != None:
         no_movements = False
         execute(robot, command_list.val())
         no_movements = True
-
+    sleep(0.5)
