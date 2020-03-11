@@ -11,21 +11,11 @@ WindowManager:
 		GridLayout:
 			cols: 1
 			size_hint: 2, 2
+			Button:
+				text: 'Press me'
+				on_release: root.btn()
 			Label:
 				text: 'Level 1'
-			Label:
-				text: 'Level 2'
-			Label:
-				text: 'Level 3'
-				color: 1,0,0,1
-			Label:
-				text: 'Level 4'
-			Label:
-				text: 'Level 5'
-			Label:
-				text: 'Level 6'
-			Label:
-				text: 'Level 7'
 		GridLayout:
 			cols: 2
 			GridLayout:
@@ -40,7 +30,16 @@ WindowManager:
 				on_release: 
 					app.root.current = 'second'
 					root.manager.transition.direction='left'
+<P>:
+	Label:
+		text: 'You pressed the button'
+		size_hint: 0.6, 0.2
+		pos_hint: {'x':0.2, 'top':1}
 
+	Button:
+		text: 'you pressed the button'
+		size_hint: 0.8, 0.2
+		pos_hint: {'x':0.1, 'y':0.1}
 <SecondWindow>:
 	name: 'second'
 
