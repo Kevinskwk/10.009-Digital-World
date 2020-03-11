@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"C:\Users\Marcus\Documents\GitHub\10.009-Digital-World\kivy_venv"
+$VIRTUAL_ENV = r"C:\Users\Jenna\Documents\GitHub\10.009-Digital-World\kivy_venv"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]

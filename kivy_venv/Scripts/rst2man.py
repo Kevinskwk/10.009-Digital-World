@@ -1,4 +1,4 @@
-#!C:\Users\Marcus\Documents\GitHub\10.009-Digital-World\kivy_venv\Scripts\python.exe
+#!C:\Users\Jenna\Documents\GitHub\10.009-Digital-World\kivy_venv\Scripts\python.exe
 
 # Author:
 # Contact: grubert@users.sf.net
