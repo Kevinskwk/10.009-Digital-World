@@ -46,7 +46,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV='C:\Users\Marcus\Documents\GitHub\10.009-Digital-World\kivy_venv'
+VIRTUAL_ENV='C:\Users\Jenna\Documents\GitHub\10.009-Digital-World\kivy_venv'
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

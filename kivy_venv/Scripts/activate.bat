@@ -1,6 +1,6 @@
 @echo off
 
-set "VIRTUAL_ENV=C:\Users\Marcus\Documents\GitHub\10.009-Digital-World\kivy_venv"
+set "VIRTUAL_ENV=C:\Users\Jenna\Documents\GitHub\10.009-Digital-World\kivy_venv"
 
 if defined _OLD_VIRTUAL_PROMPT (
     set "PROMPT=%_OLD_VIRTUAL_PROMPT%"
