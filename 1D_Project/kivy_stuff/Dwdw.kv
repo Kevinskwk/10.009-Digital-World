@@ -4,34 +4,42 @@ WindowManager:
 
 <MainWindow>:
 	name: 'main'
-
+	btn_1: btn_1
 	GridLayout:
 		cols: 1
 
 		GridLayout:
 			cols: 1
-			size_hint: 3, 3
+			size_hint: 3, 3 
 			Button:
-				text: 'Level 1'
+				id: btn_1
+				text: 'LvL   1'
 				on_release: root.btn()
+				font_size: 35
 			Button:
-				text: 'Level 2'
-				on_release: root.btn()
+				text: 'LvL   2'
+				on_release: root.update()
+				font_size: 35
 			Button:
-				text: 'Level 3'
+				text: 'LvL   3'
 				on_release: root.btn()
+				font_size: 35
 			Button:
-				text: 'Level 4'
+				text: 'LvL   4'
 				on_release: root.btn()
+				font_size: 35
 			Button:
-				text: 'Level 5'
+				text: 'LvL   5'
 				on_release: root.btn()
+				font_size: 35
 			Button:
-				text: 'Level 6'
+				text: 'LvL   6'
 				on_release: root.btn()
+				font_size: 35
 			Button:
-				text: 'Level 7'
+				text: 'LvL   7'
 				on_release: root.btn()
+				font_size: 35
 		GridLayout:
 			cols: 2
 			GridLayout:
