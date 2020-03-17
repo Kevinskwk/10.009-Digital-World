@@ -59,7 +59,7 @@ def read_bin_log_values(db, user):
 
 def update_specific_bin_state(db, user, update_list, bin_name):
     # Takes in a Firebase Database, user, and update_list string and updates the specific Firebase child node, and returns updated list values in a string
-    output = f"Smell: {update_list[1]}, Ultrasonic: {update_list[4]}, Water: {update_list[7]}"
+    output = f"Smell: {update_list[1]}, Ultrasonic: {update_list[4]}, Water: {update_list[7]}\n"
 
     bin_state_dict = {'Smell': int(update_list[1]), 'Ultrasonic': int(update_list[4]), 'Water': int(update_list[7])}
     db.child('current_bin_states').child(bin_name).set(bin_state_dict)
