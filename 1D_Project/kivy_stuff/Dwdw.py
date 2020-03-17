@@ -15,10 +15,12 @@ in_color = 1,0,0,1
         self.btn.color = in_color'''
 
 
+
 class P(FloatLayout):
     pass
 
 class MainWindow(Screen):
+    btn_1 = ObjectProperty(None)
     '''def __init__(self, **kwargs):
         super(MainWindow, self).__init__(**kwargs)
         self.btn_1.background_color = in_color'''
