@@ -1,24 +1,11 @@
 from libdw import pyrebase
 import random
 
-
 def init_firebase():
     # Create a firebase object by specifying the URL of the database and its secret token.
     # The firebase object has functions put and get, that allows user to put data onto
     # the database and also retrieve data from the database.
-    projectid = "dw1dproject"
-    dburl = "https://" + projectid + ".firebaseio.com"
-    authdomain = projectid + ".firebaseapp.com"
-    apikey = "AIzaSyCMv0kFFwAnStTfLbI94PVdppuPZAhmS_Q"  # unique token used for authentication
-    email = "angsonggee@yahoo.com.sg"
-    password = "password"
-
-    config = {
-        "apiKey": apikey,
-        "authDomain": authdomain,
-        "databaseURL": dburl,
-    }
-
+    from credential import *
 
     firebase = pyrebase.initialize_app(config)
     auth = firebase.auth()

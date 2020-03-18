@@ -1,3 +1,5 @@
+# Not complete
+
 bin_list = db.child('log').get()
 days_cleaned = []
 time_cleaned = []
@@ -43,9 +45,9 @@ for k,v in floor_dictionary.items():
 
 # 7 Lists:
 # for 1 floor:
-for one bin:
-[full(0/1), wet(0/1), smell(0/1), averagetime], [bin2 same] ... [for all bins]...
+#for one bin:
+#[full(0/1), wet(0/1), smell(0/1), averagetime], [bin2 same] ... [for all bins]...
 
 # list of all bins across all 7 floors
-[sort by average time (shortest up)]
-[same output as before but sorted].....................
+#[sort by average time (shortest up)]
+#[same output as before but sorted].....................
