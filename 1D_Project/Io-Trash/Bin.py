@@ -4,13 +4,14 @@ from libdw import pyrebase
 from credential import *
 import time
 
+print('Initiating...')
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 db = firebase.database()
 user = auth.sign_in_with_email_and_password(email, password)
 
 class Bin:
-    def __init__(self, ID, db, user, echoPin=23, triggerPin=24, waterPin=18, smellPin=17, buttonPin=20, LEDPin=21):
+    def __init__(self, ID, db, user, echoPin=24, triggerPin=23, waterPin=18, smellPin=17, buttonPin=20, LEDPin=26):
         self.ID = str(ID)
         self.US = DistanceSensor(echo=echoPin, trigger=triggerPin)
         self.water = InputDevice(waterPin)
@@ -28,9 +29,10 @@ class Bin:
 
     def get_data(self):
         # get ultrasonic, water and smell sensor data
-        USReading = self.US.distance
-        waterReading = not self.water.activate
-        smellReading = self.smell.activate
+        USReading = self.US.distance * 100
+        print(USReading)
+        waterReading = not self.water.is_active
+        smellReading = self.smell.is_active
         if USReading <= 20:
             self.sensors['us'] = True
         else:
@@ -45,6 +47,7 @@ class Bin:
             self.log(0)
 
         self.needClean = currentState
+        print(self.sensors)
 
 
     def update(self):
@@ -54,7 +57,8 @@ class Bin:
     def button_pressed(self):
         # check if the button is pressed, change the cleaning state accordingly
         self.cleaning = not self.cleaning
-        self.LED.on
+        self.LED.toggle()
+        print('button pressed')
 
     def log(self, logType):
         # log record to firebase for analysis
@@ -68,10 +72,9 @@ def loop():
     while True:
         if not bin.cleaning:
             t = time.localtime(time.time())
-            if t.tm_sec <= 1:
+            if t.tm_sec % 3 == 1:
                 bin.get_data()
-                bin.update()
-                
+               # bin.update()
+                time.sleep(1)
 
-
-        
+loop()

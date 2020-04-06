@@ -20,29 +20,30 @@ class MySMClass(sm.SM):
         # ground = inp.prox_ground.reflected
         # ground = inp.prox_ground.ambiant
 
-        # ground = inp.prox_ground.delta
+        ground = inp.prox_ground.delta
         try:
             left = ground[0]
             right = ground[1]
         except:
             left = -1
             right = -1
-        # print(left,right)
+        print(left,right)
+        print(state)
         
-        if left == 1 and right == 1:
+        if left >= 255 and right >= 255:
             if state == 0:
-                return 0, io.Action(fv=0.2, rv=0.0)
+                return 0, io.Action(fv=0.05, rv=0.0)
             else:
-                return 3, io.Action(fv=0.05, rv=-0.2)
+                return 3, io.Action(fv=0.0, rv=-1)
 
-        if left == 0 and right == 0:
-            return 1, io.Action(fv=0.05, rv = 0.2)
+        if left < 255 and right < 255:
+            return 1, io.Action(fv=0.0, rv = 1)
 
-        if left == 1 and right == 0:
-            return 2, io.Action(fv=0.2, rv=0)
+        if left >= 255 and right < 255:
+            return 2, io.Action(fv=0.05, rv=0.0)
 
-        if left == 0 and right == 1:
-            return 4, io.Action(fv=0, rv=0.2)
+        if left < 255 and right >= 255:
+            return 4, io.Action(fv=0.0, rv=1)
 
     #########################################
     # Don't modify the code below.
