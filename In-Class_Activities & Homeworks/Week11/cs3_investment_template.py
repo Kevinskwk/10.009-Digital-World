@@ -4,9 +4,6 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button 
 
-import re
-
-
 class MyLabel(Label):
 
     def __init__(self, **kwargs):
@@ -15,15 +12,10 @@ class MyLabel(Label):
         self.padding = (20, 20)
 
 class FloatInput(TextInput):
-
-    pat = re.compile('[^0-9]')
-    def insert_text(self, substring, from_undo=False):
-        pat = self.pat
-        if '.' in self.text:
-            s = re.sub(pat, '', substring)
-        else:
-            s = '.'.join([re.sub(pat, '', s) for s in substring.split('.', 1)])
-        return super(FloatInput, self).insert_text(s, from_undo=from_undo)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.hint_text = 'input value'
+        self.input_filter = 'float'
 
 class Investment(App):
 
