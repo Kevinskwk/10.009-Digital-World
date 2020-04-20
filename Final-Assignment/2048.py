@@ -5,10 +5,13 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
+from kivy.uix.popup import Popup
 
 import numpy as np
 import time
 import random
+
+import pickle
 
 tile_color_map = {
     2: (0, 1, 0, 0.8),
@@ -60,6 +63,7 @@ class Menu(Screen):
         self.add_widget(self.layout)
     
     def start_game(self, value):
+        '''slide to game screen and start game'''
         self.manager.transition.direction = 'right'
         self.manager.current = 'game'
 
@@ -82,12 +86,16 @@ class Game(Screen):
                 self.grid.add_widget(self.tiles[i][j])
         
         # top bar
-        restartButton = Button(text='Restart', on_press=self.restart, font_size=24)
-        quitButton = Button(text='Quit', on_press=self.quit, font_size=24)
+        restartButton = Button(text='Restart', on_press=self.restart, font_size=24, size_hint_x=0.5)
+        quitButton = Button(text='Quit', on_press=self.quit, font_size=24, size_hint_x=0.5)
+        saveButton = Button(text='Save', on_press=self.save, font_size=24, size_hint_x=0.5)
+        loadButton = Button(text='Load', on_press=self.load, font_size=24, size_hint_x=0.5)
         self.scoreLabel = Label(text=str(self.score), font_size=24)
         self.top_bar.add_widget(quitButton)
-        self.top_bar.add_widget(self.scoreLabel)
         self.top_bar.add_widget(restartButton)
+        self.top_bar.add_widget(self.scoreLabel)
+        self.top_bar.add_widget(saveButton)
+        self.top_bar.add_widget(loadButton)
         
         # swipe control
         self.grid.bind(on_touch_down=self._touch_down)
@@ -245,7 +253,11 @@ class Game(Screen):
             for j in range(4):
                 self.tiles[i][j].value = self.matrix[i, j]
         if self.over:
-            self.scoreLabel.text = "Game Over\n {}".format(self.score)
+            self.scoreLabel.text = 'Game Over\nScore: {}'.format(self.score)
+            popup = Popup(title='Notification',
+                          content=Label(text='Game Over\nScore: {}'.format(self.score), font_size=24),
+                          size_hint=(0.4, 0.3))
+            popup.open()
         else:
             self.scoreLabel.text = str(self.score)
 
@@ -271,7 +283,46 @@ class Game(Screen):
         self.add_tile()
         self.add_tile()
 
+    def save(self, value):
+        '''save the game'''
+        if self.over:
+            msg = 'You cannot save a game\n that is already over!'        
+        else:
+            try:
+                lmatrix = self.matrix.tolist()
+                pickle.dump(lmatrix, open('save.p', 'wb'))
+                msg = 'Saved Successfully!'
+            except:
+                msg = 'Error saving the game:('
+        
+        popup = Popup(title='Notification',
+                    content=Label(text=msg, font_size=24),
+                    size_hint=(0.4, 0.3))
+        popup.open()
+
+    def load(self, value):
+        '''load saved game'''
+        backup = self.matrix
+        try:
+            lmatrix = pickle.load(open('save.p', 'rb'))
+            assert len(lmatrix) == 4
+            assert len(lmatrix[0]) == 4
+            self.matrix = np.array(lmatrix)
+            msg = 'Loaded successfully!'
+        except:
+            msg = 'Error loading saved game :('
+            self.matrix = backup
+
+        popup = Popup(title='Notification',
+                    content=Label(text=msg, font_size=24),
+                    size_hint=(0.4, 0.3))
+        popup.open()
+
+        self.over = self.is_over()
+        self.update()
+
     def quit(self, value):
+        '''move back to menu screen without resetting the game'''
         self.manager.transition.direction = 'left'
         self.manager.current = 'menu'
 
