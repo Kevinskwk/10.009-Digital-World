@@ -6,6 +6,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
 from kivy.uix.popup import Popup
+from kivy.animation import Animation
 
 import numpy as np
 import time
@@ -14,20 +15,21 @@ import random
 import pickle
 
 tile_color_map = {
-    2: (0, 1, 0, 0.8),
-    4: (0, 0.8, 0.2, 0.8),
-    8: (0, 0.6, 0.4, 0.8),
-    16: (0, 0.4, 0.6, 0.8),
-    32: (0, 0.2, 0.8, 0.8),
-    64: (0, 0, 1, 0.8),
-    128: (0.2, 0, 0.8, 0.8),
-    256: (0.4, 0, 0.6, 0.8),
-    512: (0.6, 0, 0.4, 0.8),
-    1024: (0.8, 0, 0.2, 0.8),
-    2048: (1, 0, 0, 0)
+    0: (0, 0.5, 0, 1),
+    2: (0, 1, 0, 1),
+    4: (0, 0.8, 0.2, 1),
+    8: (0, 0.6, 0.4, 1),
+    16: (0, 0.4, 0.6, 1),
+    32: (0, 0.2, 0.8, 1),
+    64: (0, 0, 1, 1),
+    128: (0.2, 0, 0.8, 1),
+    256: (0.4, 0, 0.6, 1),
+    512: (0.6, 0, 0.4, 1),
+    1024: (0.8, 0, 0.2, 1),
+    2048: (1, 0, 0, 1)
 }
 
-class Tile(Label):
+class Tile(Button):
     '''
     customised Tile class with property value
     when changing value, change text and color at the same time
@@ -36,6 +38,7 @@ class Tile(Label):
         Label.__init__(self, **kwargs)
         self.font_size = 48
         self.value = value
+        self.background_disabled_normal = self.background_normal
 
     def set_value(self, value):
         self._value = value
@@ -44,7 +47,9 @@ class Tile(Label):
         else:
             self.text = str(value)
         if value in tile_color_map:
-            self.color = tile_color_map.get(value)
+            t = 0.1 if value > 0 else 0
+            anim = Animation(background_color = tile_color_map.get(value), duration=t)
+            anim.start(self)
 
     def get_value(self):
         return self._value
@@ -64,7 +69,7 @@ class Menu(Screen):
     
     def start_game(self, value):
         '''slide to game screen and start game'''
-        self.manager.transition.direction = 'right'
+        self.manager.transition.direction = 'left'
         self.manager.current = 'game'
 
 class Game(Screen):
@@ -82,7 +87,7 @@ class Game(Screen):
             for j in range(4):
                 if j == 0:
                     self.tiles.append([])
-                self.tiles[i].append(Tile(value=0))
+                self.tiles[i].append(Tile(value=0, disabled=True))
                 self.grid.add_widget(self.tiles[i][j])
         
         # top bar
@@ -204,7 +209,6 @@ class Game(Screen):
             self.score += score
             self.add_tile()
 
-
         return (changed, score) 
         
 
@@ -252,6 +256,7 @@ class Game(Screen):
         for i in range(4):
             for j in range(4):
                 self.tiles[i][j].value = self.matrix[i, j]
+
         if self.over:
             self.scoreLabel.text = 'Game Over\nScore: {}'.format(self.score)
             popup = Popup(title='Notification',
@@ -261,7 +266,9 @@ class Game(Screen):
         else:
             self.scoreLabel.text = str(self.score)
 
+
     def is_over(self):
+        '''check if the game is over by trying all possible movements'''
         if self.get_empty().size != 0:
             return False
         else:
@@ -289,8 +296,8 @@ class Game(Screen):
             msg = 'You cannot save a game\n that is already over!'        
         else:
             try:
-                lmatrix = self.matrix.tolist()
-                pickle.dump(lmatrix, open('save.p', 'wb'))
+                archive = (self.score, self.matrix.tolist())
+                pickle.dump(archive, open('save.p', 'wb'))
                 msg = 'Saved Successfully!'
             except:
                 msg = 'Error saving the game:('
@@ -304,10 +311,11 @@ class Game(Screen):
         '''load saved game'''
         backup = self.matrix
         try:
-            lmatrix = pickle.load(open('save.p', 'rb'))
+            score, lmatrix = pickle.load(open('save.p', 'rb'))
             assert len(lmatrix) == 4
             assert len(lmatrix[0]) == 4
             self.matrix = np.array(lmatrix)
+            self.score = score
             msg = 'Loaded successfully!'
         except:
             msg = 'Error loading saved game :('
@@ -323,7 +331,7 @@ class Game(Screen):
 
     def quit(self, value):
         '''move back to menu screen without resetting the game'''
-        self.manager.transition.direction = 'left'
+        self.manager.transition.direction = 'right'
         self.manager.current = 'menu'
 
 
