@@ -21,6 +21,7 @@ class MySMClass(sm.SM):
         # ground = inp.prox_ground.ambiant
 
         ground = inp.prox_ground.delta
+        print(ground)
         try:
             left = ground[0]
             right = ground[1]
@@ -36,14 +37,11 @@ class MySMClass(sm.SM):
             else:
                 return 3, io.Action(fv=0.0, rv=-1)
 
-        if left < 255 and right < 255:
+        if left < 255:
             return 1, io.Action(fv=0.0, rv = 1)
 
         if left >= 255 and right < 255:
             return 2, io.Action(fv=0.05, rv=0.0)
-
-        if left < 255 and right >= 255:
-            return 4, io.Action(fv=0.0, rv=1)
 
     #########################################
     # Don't modify the code below.
